@@ -1,4 +1,5 @@
 import streamlit as st
+from TumorDetection import TumorDetection
 import numpy as np
 from tensorflow.keras.utils import  normalize
 from keras.preprocessing.image import img_to_array
@@ -23,22 +24,24 @@ model=load_model('my_model .h5')
 
 if image_file:
     image = load_image(image_file)
-    image = img_to_array(image)
-    image=Preprocess(image)
+    st.image(image)
+    image_array= img_to_array(image)
+    image_pre=Preprocess(image_array)
 
 run=st.button("Process")
 if run:
-    result = model.predict(image)
+    result = model.predict(image_pre)
     if result>=0.5:
         st.text("Unfortunately you have a brain tumor")
+        TumorD=TumorDetection()
+        imagePre=TumorD.preprocess(image_array)
+        meanStd=cv2.meanStdDev(imagePre)
+        Thresh=meanStd[0][0]+meanStd[1][0]
+        TumorD.cannyThreshold(image_array)
+        thresh=TumorD.detection(imagePre,Thresh[0])
+        st.image(image_array)
+    
     elif result<0.5:
         st.text("Fortunately your brain is healthy")
-
-
-
-
-
-
-
-
-
+    
+    

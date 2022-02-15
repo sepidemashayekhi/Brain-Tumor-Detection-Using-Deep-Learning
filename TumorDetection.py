@@ -25,8 +25,6 @@ class TumorDetection():
         edged = cv2.Canny(closed,self.lower,self.upper)
         (cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
         cv2.CHAIN_APPROX_SIMPLE)
-        cnts=tuple(cnts)
-        print(len(cnts))
         cv2.drawContours(self.image, cnts, -1, (0, 0, 255), 2)
         return edged
 
